@@ -5,13 +5,29 @@ const { v4: uuidv4 } = require('uuid');
 const moment = require('moment')
 moment.locale('id');
 
-exports.getProduct = (req, res) => {
-  productModels.getProducts()
+exports.getProduct = async(req, res) => {
+  const by = req.query.by || 'id'
+  const order = req.query.order || 'ASC'
+  const searchProduct = req.query.productName || ''
+  const limit = parseInt(req.query.limit) || 5
+  const page = parseInt(req.query.page) || 1
+  
+  const countProducts = await productModels.countProducts()
+
+  const totalData = countProducts[0].totalData
+  const totalPage = Math.ceil(totalData / limit)
+  const offset = (page - 1) * limit
+
+  productModels.getProducts(searchProduct, offset, limit, by, order)
     .then((result) => {
       if (result.length > 0) {
         res.json({
           message: `Succes get data`,
           status: 200,
+          currentPage: page,
+          totalPage: totalPage,
+          totalProducts: totalData,
+          MaxperPage: limit,
           data: result
         })
       } else {

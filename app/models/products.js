@@ -1,10 +1,24 @@
 const { query } = require('express')
 const connection = require('../configs/db')
 
-const transaction = {
-  getProducts: () => {
+const product = {
+  
+  countProducts: () => {
+    return new Promise((resolve, reject) => {
+      connection.query('SELECT COUNT(*) AS totalData FROM products ', (err, result) => {
+        if (err) {
+          reject(new Error('Internal server error'))
+        } else {
+          resolve(result)
+        }
+      })
+    })
+  },
+
+
+  getProducts: (productName, offset, limit, by, order) => {
   return new Promise((resolve, reject) => {
-    connection.query('SELECT * FROM products', (err, result) => {
+    connection.query(`SELECT * FROM products WHERE productName LIKE '%${productName}%' ORDER BY ${by} ${order} LIMIT ${limit} OFFSET ${offset}`, (err, result) => {
       if (!err) {
         resolve(result)
       } else {
@@ -81,4 +95,4 @@ deleteProducts: (id) => {
 
 
 }
-module.exports = transaction
+module.exports = product
