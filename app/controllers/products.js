@@ -81,7 +81,7 @@ exports.createProduct = async (req, res) => {
     }
     const resultInsert = await productModels.createProducts(data)
 
-    return helper.response(res, data, 401, null)
+    return helper.response(res, data, 200, null)
   } catch (error) {
     console.log(error)
     return helper.response(res, null, 500, { message: 'Internal Server Error' })
