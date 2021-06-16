@@ -139,7 +139,7 @@ exports.deleteProduct = (req, res) => {
     .then((result) => {
       if (result.affectedRows !== 0) {
         res.json({
-          message: `Succes delete data id: ${id}`,
+          message: `Succes delete data`,
           status: 200
         })
       } else {
